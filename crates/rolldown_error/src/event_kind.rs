@@ -1,7 +1,8 @@
-use std::fmt::Display;
+use std::fmt::{write, Display};
 
 pub enum EventKind {
   // --- These kinds are copied from rollup: https://github.com/rollup/rollup/blob/0b665c31833525c923c0fc20f43ebfca748c6670/src/utils/logs.ts#L102-L179
+  Ambiguous,
   UnresolvedEntry,
   UnresolvedImport,
   Eval,
@@ -28,6 +29,7 @@ impl Display for EventKind {
       EventKind::SourcemapError => write!(f, "SOURCEMAP_ERROR"),
       EventKind::CircularDependency => write!(f, "CIRCULAR_DEPENDENCY"),
       EventKind::MissingExport => write!(f, "MISSING_EXPORT"),
+      EventKind::Ambiguous => write!(f, "NAMESPACE_CONFLICT"),
       // --- Rolldown specific
       EventKind::NapiError => write!(f, "NAPI_ERROR"),
       EventKind::IoError => write!(f, "IO_ERROR"),

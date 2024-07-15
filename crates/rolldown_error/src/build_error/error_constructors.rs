@@ -9,8 +9,8 @@ use super::BuildError;
 use crate::events::{
   circular_dependency::CircularDependency, eval::Eval, external_entry::ExternalEntry,
   forbid_const_assign::ForbidConstAssign, missing_export::MissingExport,
-  sourcemap_error::SourceMapError, unresolved_entry::UnresolvedEntry,
-  unresolved_import::UnresolvedImport,
+  namespace_conflict::NamespaceConflict, sourcemap_error::SourceMapError,
+  unresolved_entry::UnresolvedEntry, unresolved_import::UnresolvedImport,
   unresolved_import_treated_as_external::UnresolvedImportTreatedAsExternal, NapiError,
 };
 
@@ -67,6 +67,24 @@ impl BuildError {
       importer_source,
       imported_specifier,
       imported_specifier_span,
+    })
+  }
+
+  pub fn ambiguous_export(
+    reexport_module: String,
+    sources: Vec<String>,
+    importer: String,
+    importer_source: ArcStr,
+    symbol: String,
+    symbol_span: Span,
+  ) -> Self {
+    Self::new_inner(NamespaceConflict {
+      reexport_module,
+      sources,
+      importer,
+      importer_source,
+      symbol,
+      symbol_span,
     })
   }
 
