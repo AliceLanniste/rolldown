@@ -21,12 +21,15 @@ workspace = true
 anyhow              = { workspace = true }
 arcstr              = { workspace = true }
 async-trait         = { workspace = true }
+oxc                 = { workspace = true }
 oxc_index           = { workspace = true }
+oxc_sourcemap       = { version = "0.15.0" }
 rolldown_common     = { workspace = true }
 rolldown_ecmascript = { workspace = true }
 rolldown_resolver   = { workspace = true }
 rolldown_sourcemap  = { workspace = true }
 rolldown_utils      = { workspace = true }
+string_wizard       = { version = "0.0.21", features = ["source_map"] }
 sugar_path          = { workspace = true }
 tracing             = { workspace = true }
 typedmap            = { workspace = true, features = ["dashmap"] }
