@@ -101,7 +101,7 @@ impl ScanStage {
     let resolver = &self.resolver;
     let plugin_driver = &self.plugin_driver;
 
-    let resolved_ids = join_all(self.options.input.iter().map(|input_item| async move {
+    let resolved_ids = join_all(self.options.input.iter().map(|input_item| async {
       struct Args<'a> {
         specifier: &'a str,
       }

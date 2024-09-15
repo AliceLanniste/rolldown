@@ -9,13 +9,14 @@ import { augmentCodeLocation } from '../log/logs'
 import { PluginContextData } from './plugin-context-data'
 import { NormalizedInputOptions } from '..'
 import type { Plugin } from './index'
+import { SourceMap } from 'dist/types/types/rolldown-output'
 
 export class TransformPluginContext extends PluginContext {
   error: (
     error: RollupError | string,
     pos?: number | { column: number; line: number },
   ) => never
-  // getCombinedSourcemap: () => SourceMap
+  getCombinedSourcemap: () => SourceMap
 
   constructor(
     options: NormalizedInputOptions,
@@ -50,6 +51,6 @@ export class TransformPluginContext extends PluginContext {
       error.hook = 'transform'
       return this.error(error)
     }
-    // this.getCombinedSourcemap = () => JSON.parse(inner.getCombinedSourcemap())
+    this.getCombinedSourcemap = () => JSON.parse(inner.getCombinedSourcemap())
   }
 }

@@ -44,16 +44,16 @@ impl<'a> TransformPluginContext<'a> {
   }
 }
 
-trait transform_version {
+trait TransformVersion {
   fn into_source_map(&self) -> SourceMap;
 }
 
-impl transform_version for oxcSourceMap {
+impl TransformVersion for oxcSourceMap {
   fn into_source_map(&self) -> SourceMap {
     SourceMap::new(
-      None,
+      self.get_file().map(Into::into),
       self.get_names().map(Into::into).collect::<Vec<_>>(),
-      None,
+      self.get_source_root().map(str::to_string),
       self.get_sources().map(Into::into).collect::<Vec<_>>(),
       self.get_source_contents().map(|x| x.map(Into::into).collect::<Vec<_>>()),
       self
