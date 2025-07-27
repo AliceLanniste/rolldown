@@ -5,18 +5,31 @@ use std::{borrow::Cow, sync::Arc};
 use rolldown_common::ModuleType;
 use rolldown_plugin::{HookUsage, Plugin};
 use rolldown_plugin_utils::{
-  AssetCache, FileToUrlEnv, PublicAssetUrlCache, check_public_file, find_special_query,
+  AssetCache, FileToUrlEnv, PublicAssetUrlCache, UsizeOrFunction, check_public_file,
+  find_special_query,
 };
 use rolldown_utils::{pattern_filter::StringOrRegex, url::clean_url};
 use serde_json::Value;
 
-#[derive(Debug, Default)]
+#[derive(Debug)]
 pub struct AssetPlugin {
   pub is_server: bool,
   pub url_base: String,
   pub public_dir: String,
   pub assets_include: Vec<StringOrRegex>,
-  pub asset_inline_limit: usize,
+  pub asset_inline_limit: UsizeOrFunction,
+}
+
+impl Default for AssetPlugin {
+  fn default() -> Self {
+    Self {
+      is_server: false,
+      url_base: String::default(),
+      public_dir: String::default(),
+      assets_include: Vec::default(),
+      asset_inline_limit: UsizeOrFunction::Number(0),
+    }
+  }
 }
 
 impl Plugin for AssetPlugin {
@@ -87,9 +100,9 @@ impl Plugin for AssetPlugin {
       is_lib: false,
       url_base: &self.url_base,
       public_dir: &self.public_dir,
-      asset_inline_limit: self.asset_inline_limit,
+      asset_inline_limit: &self.asset_inline_limit,
     };
-    let url = env.file_to_url(&id)?;
+    let url = env.file_to_url(&id).await?;
 
     let url = rolldown_plugin_utils::encode_uri_path(url);
     let code = arcstr::format!("export default {}", serde_json::to_string(&Value::String(url))?);
